@@ -4,4 +4,4 @@ function ProfileDetail(props) {
 
 }
 
-export default ProfileDetail
+export default ProfileDetail;

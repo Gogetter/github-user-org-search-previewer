@@ -14,7 +14,8 @@ class Profile extends React.Component {
     componentDidMount() {
         this.setState({isLoading: true});
 
-        fetch("https://api.github.com/users/gogetter")
+        fetch("https://api.github.com/users/gogetter", {
+            headers: {'Accept': 'application/vnd.github.v3+json'}})
         .then(response => response.json())
         .then(responseData => this.setState({
             data: responseData,
