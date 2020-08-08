@@ -1,6 +1,5 @@
 import React from "react"
 import Avatar from "../avatar/Avatar"
-import ProfileDetailSummary from "./ProfileDetailSummary"
 
 function Profile(props) {
 
@@ -13,11 +12,6 @@ function Profile(props) {
                 pageUrl: props.html_url, 
                 name: props.name}}
             />
-
-            <br />
-
-            <ProfileDetailSummary />
-            
         </div>
     );
     
