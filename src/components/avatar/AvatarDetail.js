@@ -2,12 +2,14 @@ import React from "react"
 
 function AvatarDetail(props) {
     return (
-        <div>
-            Joined GitHuB on: {props.joinedDate}
+        <div className="container">
+            <h3>Joined GitHuB on: {props.joinedDate}</h3>
 
             <br />
 
-            <a href={props.pageUrl}> View {props.name}'s profile</a>
+            <h3>
+                <a href={props.pageUrl}> View {props.name}'s profile</a>
+            </h3>
         </div>
 
     );

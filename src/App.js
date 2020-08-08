@@ -1,13 +1,14 @@
 import React from "react"
+import Search from "./components/search/Search";
 
-import Profile from "./components/profile/Profile"
+import "./style.css"
 
-class App extends React.Component {
-    render() {
-        return(
-            <Profile />
-        )
-    }
+function App() {
+    return (
+        <div>
+            <Search />
+        </div>
+    )
 }
 
 export default App;
