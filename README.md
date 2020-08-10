@@ -16,4 +16,4 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
 
-## Blog post for this is available from [here]()
+## Blog post for this is available from [here](https://medium.com/@euedofia/reactjs-a-java-developers-sojourn-732d4671223f)
