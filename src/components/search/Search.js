@@ -1,99 +1,92 @@
-import React, { Component } from "react"
+import React, { useState } from "react"
 
 import Profile from "../profile/Profile";
 
-class Search extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            searchText: "",
-            isOrganizationSearchChecked: false,
-            isLoading: false,
-            data: {}
-        }
+export default function Search() {
+    const [searchText, setSearchText] = useState("");
+    const [isOrganizationSearchChecked, setSearchOptionChange] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [data, setSearchData] = useState({});
+
+    function handleToggleSearchOptionChange(event) {
+        setSearchOptionChange( event.target.checked );
     }
 
-    toggleSearchOptionChange = (event) => {
-        this.setState({ isOrganizationSearchChecked: event.target.checked });
+    function handleSearchTextChange(event) {
+        setSearchText( event.target.value );
     }
 
-    handleSearchTextChange = (event) => {
-        this.setState({ searchText: event.target.value })
-    }
+    function handleSearchTextKeyPress(event) {
+        setSearchData(() => {
+            if (event.charCode === 13 && searchText) {
 
-    handleSearchTextKeyPress = (event) => {
-        if (event.charCode === 13 && this.state.searchText) {
+                setSearchText(event.target.value);
 
-            this.setState({ searchText: event.target.value });
+                const usersSearchLinkPrefix = "https://api.github.com/users/";
+                const orgsSearchLinkPrefix = "https://api.github.com/orgs/";
 
-            const usersSearchLinkPrefix = "https://api.github.com/users/";
-            const orgsSearchLinkPrefix = "https://api.github.com/orgs/";
+                let searchLink;
+                if (searchText) {
+                    if (isOrganizationSearchChecked) {
+                        searchLink = orgsSearchLinkPrefix.concat(searchText);
 
-            let searchLink;
-            if (this.state.searchText) {
-                if (this.state.isOrganizationSearchChecked) {
-                    searchLink = orgsSearchLinkPrefix.concat(this.state.searchText);
-
-                } else {
-                    searchLink = usersSearchLinkPrefix.concat(this.state.searchText);
-                }
-            }
-
-            fetch(searchLink, {
-                headers: { 'Accept': 'application/vnd.github.v3+json' }})
-                .then(response => {
-                    if (response.ok) {
-                        return response.json();
                     } else {
-                        this.setState({ data: {} })
+                        searchLink = usersSearchLinkPrefix.concat(searchText);
                     }
-                })
-                .then(responseData => this.setState({
-                    data: responseData,
-                    isLoading: false
-                }));
-        }
+                }
+
+                fetch(searchLink, {
+                    headers: { 'Accept': 'application/vnd.github.v3+json' }})
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            return {}
+                        }
+                    })
+                    .then(responseData => {
+                        setIsLoading(false);
+                        setSearchData(responseData);
+                    });
+            }
+        });
     }
 
-    isEmptyObject(obj) {
-        var name;
+    function isEmptyObject(obj) {
+        let name;
         for (name in obj) {
             return false;
         }
         return true;
     }
 
-    render() {
-        return (
-            <div className="form__group">
-                <input className="form__input"
-                    type="text"
-                    placeholder="User/Organization name"
-                    name="searchText"
-                    value={this.state.searchText}
-                    onKeyPress={this.handleSearchTextKeyPress}
-                    onChange={this.handleSearchTextChange}
-                />
+    return (
+        <div className="form__group">
+            <input className="form__input"
+                   type="text"
+                   placeholder="User/Organization name"
+                   name="searchText"
+                   value={searchText}
+                   onKeyPress={handleSearchTextKeyPress}
+                   onChange={handleSearchTextChange}
+            />
 
-                <br />
+            <br />
 
-                <label className="form__label">
-                    <span></span>
-                    <input className="form__checkbox"
-                        type="checkbox"
-                        checked={this.state.isOrganizationSearchChecked}
-                        onChange={this.toggleSearchOptionChange} />
+            <label className="form__label">
+                <span />
+                <input className="form__checkbox"
+                       type="checkbox"
+                       checked={isOrganizationSearchChecked}
+                       onChange={handleToggleSearchOptionChange} />
 
-                    GitHub Organization Search?
-                </label>
+                GitHub Organization Search?
+            </label>
 
-                <br />
-                <br />
+            <br />
+            <br />
 
-                {this.isEmptyObject(this.state.data) ? <div /> : <Profile {...this.state.data} />}
-            </div>
-        )
-    }
+            {isEmptyObject({...data}) ? <div /> : <Profile {...data} />}
+        </div>
+    )
 }
-
-export default Search;
